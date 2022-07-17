@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import HomePage from "./HomePage";
 import CreateRoomPage from "./CreateRoomPage";
 import JoinRoomPage from "./JoinRoomPage";
-
+import Room from "./Room";
 
 export default class App extends Component {
   constructor(props) {
@@ -17,6 +17,7 @@ export default class App extends Component {
         <Routes>
           <Route path="/create" element={<CreateRoomPage />} />
           <Route path="/join" element={<JoinRoomPage />} />
+          <Route path="/room/:roomCode" element={<Room />} />
           <Route path="/" element={<HomePage />} />
         </Routes>
       </Router>

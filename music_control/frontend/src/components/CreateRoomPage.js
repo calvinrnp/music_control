@@ -9,18 +9,16 @@ import {
   Typography,
   TextField,
   Button,
-  Paper,
-  Box,
-  styled,
 } from "@mui/material";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const defaultVotes = "2";
+const defaultVotes = "3";
 
 export default function CreateRoomPage(props) {
   const [guestCanPause, setGuestCanPause] = useState(true);
   const [votesToSkip, setVotesToSkip] = useState(defaultVotes);
+  const navigate = useNavigate();
 
   function handleGuestCanPauseChange(e) {
     setGuestCanPause(e.target.value === "true" ? true : false);
@@ -41,7 +39,7 @@ export default function CreateRoomPage(props) {
     };
     fetch("/api/create-room", requestOptions)
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => navigate("/room/" + data.code, {replace: true}));
   }
 
   return (
