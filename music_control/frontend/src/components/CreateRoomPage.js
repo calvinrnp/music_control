@@ -97,17 +97,17 @@ export default function CreateRoomPage(props) {
       </Grid>
       <Grid container item spacing={1} justifyContent="center" alignItems="center">
         <Grid item spacing={6}>
+          <Button color="secondary" variant="contained" to="/" component={Link}>
+            Back
+          </Button>
+        </Grid>
+        <Grid item spacing={6}>
           <Button
             color="primary"
             variant="contained"
             onClick={handleRoomButtonPressed}
           >
             Create Room
-          </Button>
-        </Grid>
-        <Grid item spacing={6}>
-          <Button color="secondary" variant="contained" to="/" component={Link}>
-            Back
           </Button>
         </Grid>
       </Grid>

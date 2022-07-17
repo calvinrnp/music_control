@@ -1,30 +1,44 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import HomePage from "./HomePage";
 import CreateRoomPage from "./CreateRoomPage";
 import JoinRoomPage from "./JoinRoomPage";
 import Room from "./Room";
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
+export default function App(props) {
+  const [roomCode, setRoomCode] = useState(null);
+
+  const handleInRoom = async () => {
+    const token = await fetch("/api/user-in-room")
+      .then((response) => response.json())
+      .then((data) => setRoomCode(data.code));
+  };
+  
+  handleInRoom();
+
+  const handleExitRoom = () => {
+    setRoomCode = null;
   }
 
-  render() {
-    return (
-      <Router>
-        <Routes>
-          <Route path="/create" element={<CreateRoomPage />} />
-          <Route path="/join" element={<JoinRoomPage />} />
-          <Route path="/room/:roomCode" element={<Room />} />
-          <Route path="/" element={<HomePage />} />
-        </Routes>
-      </Router>
-    );
-  }
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={ roomCode ? <Navigate to={`/room/${roomCode}`} /> : <HomePage /> } />
+        <Route path="/create" element={<CreateRoomPage />} />
+        <Route path="/join" element={<JoinRoomPage />} />
+        <Route path="/room/:roomCode" element={<Room />} />
+      </Routes>
+    </Router>
+  );
 }
 
 const appDiv = document.getElementById("app");
-const root = createRoot(appDiv)
+const root = createRoot(appDiv);
 root.render(<App />);
