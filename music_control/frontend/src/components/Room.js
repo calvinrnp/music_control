@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Grid, Button, Typography } from "@mui/material";
+import ViewRoomPage from "./ViewRoomPage";
 
 export default function Room({ leaveRoomCallback }) {
   const [guestCanPause, setGuestCanPause] = useState(false);
   const [votesToSkip, setVotesToSkip] = useState("2");
   const [isHost, setIsHost] = useState(false);
   const [noRoom, setNoRoom] = useState(false);
-  const [showSettings, setShowSettings] = useState(false)
+  const [showSettings, setShowSettings] = useState(false);
   const { roomCode } = useParams();
   const navigate = useNavigate();
 
@@ -39,49 +40,83 @@ export default function Room({ leaveRoomCallback }) {
   if (noRoom) {
     return <Navigate to="/" />;
   } else {
-    return (
-      <Grid
-        container
-        spacing={1}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        sx={{ minHeight: "100vh" }}
-      >
-        <Grid item xs={12}>
-          <Typography variant="h4" component="h4">
-            Code: {roomCode.toString()}
-          </Typography>
+    if (showSettings) {
+      return (
+        <Grid
+          container
+          spacing={1}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          sx={{minHeight: "100vh"}}
+        >
+          <Grid item>
+            <ViewRoomPage
+              update={true}
+              votesToSkip={votesToSkip}
+              guestCanPause={guestCanPause}
+              roomCode={roomCode}
+              updateCallback={() => {}}
+            />
+          </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {setShowSettings(false)}}
+            >
+              okay
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h4" component="h4">
-            Votes required to skip: {votesToSkip.toString()}
-          </Typography>
+      );
+    } else {
+      return (
+        <Grid
+          container
+          spacing={1}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          sx={{ minHeight: "100vh" }}
+        >
+          <Grid item xs={12}>
+            <Typography variant="h4" component="h4">
+              Code: {roomCode.toString()}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h4" component="h4">
+              Votes required to skip: {votesToSkip.toString()}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h4" component="h4">
+              Host: {isHost.toString()}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={leaveButtonPressed}
+            >
+              Leave Room
+            </Button>
+          </Grid>
+          {isHost && (
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setShowSettings(true)}
+              >
+                Settings
+              </Button>
+            </Grid>
+          )}
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h4" component="h4">
-            Host: {isHost.toString()}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={leaveButtonPressed}
-          >
-            Leave Room
-          </Button>
-        </Grid>
-        {isHost && <Grid item xs={12}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setShowSettings(true)}
-          >
-            Settings
-          </Button>
-        </Grid>}
-      </Grid>
-    );
+      );
+    }
   }
 }

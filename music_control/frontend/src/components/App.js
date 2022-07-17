@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import HomePage from "./HomePage";
-import CreateRoomPage from "./CreateRoomPage";
+import ViewRoomPage from "./ViewRoomPage";
 import JoinRoomPage from "./JoinRoomPage";
 import Room from "./Room";
 
@@ -30,7 +30,7 @@ export default function App(props) {
     <Router>
       <Routes>
         <Route path="/" element={ roomCode ? <Navigate to={`/room/${roomCode}`} /> : <HomePage /> } />
-        <Route path="/create" element={<CreateRoomPage />} />
+        <Route path="/create" element={<ViewRoomPage />} />
         <Route path="/join" element={<JoinRoomPage />} />
         <Route path="/room/:roomCode" element={<Room leaveRoomCallback={handleLeaveRoom} />} />
       </Routes>

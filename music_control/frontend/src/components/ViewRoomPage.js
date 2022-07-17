@@ -9,13 +9,14 @@ import {
   Typography,
   TextField,
   Button,
+  ButtonGroup,
 } from "@mui/material";
 
 import { Link, useNavigate } from "react-router-dom";
 
 const defaultVotes = "3";
 
-export default function CreateRoomPage(props) {
+export default function ViewRoomPage(props) {
   const [guestCanPause, setGuestCanPause] = useState(true);
   const [votesToSkip, setVotesToSkip] = useState(defaultVotes);
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ export default function CreateRoomPage(props) {
       direction="column"
       alignItems="center"
       justifyContent="center"
-      sx={{ minHeight: "100vh" }}
+      sx={{ minHeight: props.update ? "0" : "100vh" }}
     >
       <Grid item xs={12}>
         <Typography component="h4" variant="h4">
@@ -58,9 +59,7 @@ export default function CreateRoomPage(props) {
       </Grid>
       <Grid item xs={12}>
         <FormControl component="fieldset">
-          <FormHelperText>
-            Guest Control of Playback State
-          </FormHelperText>
+          <FormHelperText>Guest Control of Playback State</FormHelperText>
           <RadioGroup
             row
             defaultValue="true"
@@ -90,18 +89,14 @@ export default function CreateRoomPage(props) {
             inputProps={{ min: 1, style: { textAlign: "center" } }}
             onChange={handleVotesChange}
           />
-          <FormHelperText>
-            Votes Required to Skip
-          </FormHelperText>
+          <FormHelperText>Votes Required to Skip</FormHelperText>
         </FormControl>
       </Grid>
-      <Grid container item justifyContent="center" alignItems="center">
-        <Grid item>
+      <Grid item xs={12}>
+        <ButtonGroup disableElevation variant="contained" color="primary">
           <Button color="secondary" variant="contained" to="/" component={Link}>
             Back
           </Button>
-        </Grid>
-        <Grid item>
           <Button
             color="primary"
             variant="contained"
@@ -109,9 +104,8 @@ export default function CreateRoomPage(props) {
           >
             Create Room
           </Button>
-        </Grid>
+        </ButtonGroup>
       </Grid>
     </Grid>
   );
 }
-

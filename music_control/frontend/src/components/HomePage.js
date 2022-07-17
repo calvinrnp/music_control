@@ -1,8 +1,6 @@
 import { Grid, Typography, ButtonGroup, Button } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
-import CreateRoomPage from "./CreateRoomPage";
-import JoinRoomPage from "./JoinRoomPage";
 
 export default function HomePage({ room }) {
 
