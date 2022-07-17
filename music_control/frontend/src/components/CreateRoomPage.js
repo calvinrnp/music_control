@@ -39,17 +39,24 @@ export default function CreateRoomPage(props) {
     };
     fetch("/api/create-room", requestOptions)
       .then((response) => response.json())
-      .then((data) => navigate("/room/" + data.code, {replace: true}));
+      .then((data) => navigate("/room/" + data.code, { replace: true }));
   }
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} align="center">
+    <Grid
+      container
+      spacing={1}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      sx={{ minHeight: "100vh" }}
+    >
+      <Grid item xs={12}>
         <Typography component="h4" variant="h4">
-          Create A Room
+          Create a Room
         </Typography>
       </Grid>
-      <Grid item xs={12} align="center">
+      <Grid item xs={12}>
         <FormControl component="fieldset">
           <FormHelperText>
             <div align="center">Guest Control of Playback State</div>
@@ -74,7 +81,7 @@ export default function CreateRoomPage(props) {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid item xs={12} align="center">
+      <Grid item xs={12}>
         <FormControl>
           <TextField
             required
@@ -88,20 +95,23 @@ export default function CreateRoomPage(props) {
           </FormHelperText>
         </FormControl>
       </Grid>
-      <Grid item xs={12} align="center">
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={handleRoomButtonPressed}
-        >
-          Create Room
-        </Button>
-      </Grid>
-      <Grid item xs={12} align="center">
-        <Button color="secondary" variant="contained" to="/" component={Link}>
-          Back
-        </Button>
+      <Grid container item spacing={1} justifyContent="center" alignItems="center">
+        <Grid item spacing={6}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={handleRoomButtonPressed}
+          >
+            Create Room
+          </Button>
+        </Grid>
+        <Grid item spacing={6}>
+          <Button color="secondary" variant="contained" to="/" component={Link}>
+            Back
+          </Button>
+        </Grid>
       </Grid>
     </Grid>
   );
 }
+
