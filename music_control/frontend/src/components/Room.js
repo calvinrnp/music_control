@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Grid, Button, Typography } from "@mui/material";
 
-export default function Room( {leaveRoomCallback} ) {
+export default function Room({ leaveRoomCallback }) {
   const [guestCanPause, setGuestCanPause] = useState(false);
   const [votesToSkip, setVotesToSkip] = useState("2");
   const [isHost, setIsHost] = useState(false);
+  const [noRoom, setNoRoom] = useState(false);
   const { roomCode } = useParams();
   const navigate = useNavigate();
 
@@ -13,7 +14,7 @@ export default function Room( {leaveRoomCallback} ) {
     .then((response) => {
       if (!response.ok) {
         leaveRoomCallback();
-        navigate("/");
+        setNoRoom(true);
       }
       return response.json();
     })
@@ -30,43 +31,47 @@ export default function Room( {leaveRoomCallback} ) {
     };
     fetch("/api/leave-room", requestOptions).then((response) => {
       leaveRoomCallback();
-      navigate("/");
+      setNoRoom("true");
     });
   }
 
-  return (
-    <Grid
-      container
-      spacing={1}
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      sx={{ minHeight: "100vh" }}
-    >
-      <Grid item xs={12}>
-        <Typography variant="h4" component="h4">
-          Code: {roomCode.toString()}
-        </Typography>
+  if (noRoom) {
+    return <Navigate to="/" />;
+  } else {
+    return (
+      <Grid
+        container
+        spacing={1}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ minHeight: "100vh" }}
+      >
+        <Grid item xs={12}>
+          <Typography variant="h4" component="h4">
+            Code: {roomCode.toString()}
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h4" component="h4">
+            Votes required to skip: {votesToSkip.toString()}
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h4" component="h4">
+            Host: {isHost.toString()}
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={leaveButtonPressed}
+          >
+            Leave Room
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <Typography variant="h4" component="h4">
-          Votes required to skip: {votesToSkip.toString()}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="h4" component="h4">
-          Host: {isHost.toString()}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={leaveButtonPressed}
-        >
-          Leave Room
-        </Button>
-      </Grid>
-    </Grid>
-  );
+    );
+  }
 }
