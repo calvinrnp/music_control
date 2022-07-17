@@ -22,10 +22,9 @@ export default function App(props) {
   
   handleInRoom();
 
-  const handleExitRoom = () => {
-    setRoomCode = null;
+  function handleLeaveRoom() {
+    setRoomCode(null);
   }
-
 
   return (
     <Router>
@@ -33,7 +32,7 @@ export default function App(props) {
         <Route path="/" element={ roomCode ? <Navigate to={`/room/${roomCode}`} /> : <HomePage /> } />
         <Route path="/create" element={<CreateRoomPage />} />
         <Route path="/join" element={<JoinRoomPage />} />
-        <Route path="/room/:roomCode" element={<Room />} />
+        <Route path="/room/:roomCode" element={<Room leaveRoomCallback={handleLeaveRoom} />} />
       </Routes>
     </Router>
   );
