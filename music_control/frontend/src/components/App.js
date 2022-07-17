@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import HomePage from "./HomePage";
 import CreateRoomPage from "./CreateRoomPage";
 import JoinRoomPage from "./JoinRoomPage";
+
 
 export default class App extends Component {
   constructor(props) {
@@ -24,4 +25,5 @@ export default class App extends Component {
 }
 
 const appDiv = document.getElementById("app");
-render(<App />, appDiv);
+const root = createRoot(appDiv)
+root.render(<App />);
