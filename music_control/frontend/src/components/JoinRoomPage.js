@@ -62,12 +62,12 @@ export default function JoinRoomPage(props) {
         justifyContent="center"
         alignItems="center"
       >
-        <Grid item spacing={6}>
+        <Grid item>
           <Button color="secondary" variant="contained" to="/" component={Link}>
             Back
           </Button>
         </Grid>
-        <Grid item spacing={6}>
+        <Grid item>
           <Button
             color="primary"
             variant="contained"

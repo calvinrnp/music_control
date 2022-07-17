@@ -7,6 +7,7 @@ export default function Room({ leaveRoomCallback }) {
   const [votesToSkip, setVotesToSkip] = useState("2");
   const [isHost, setIsHost] = useState(false);
   const [noRoom, setNoRoom] = useState(false);
+  const [showSettings, setShowSettings] = useState(false)
   const { roomCode } = useParams();
   const navigate = useNavigate();
 
@@ -71,6 +72,15 @@ export default function Room({ leaveRoomCallback }) {
             Leave Room
           </Button>
         </Grid>
+        {isHost && <Grid item xs={12}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setShowSettings(true)}
+          >
+            Settings
+          </Button>
+        </Grid>}
       </Grid>
     );
   }

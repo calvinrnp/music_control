@@ -59,7 +59,7 @@ export default function CreateRoomPage(props) {
       <Grid item xs={12}>
         <FormControl component="fieldset">
           <FormHelperText>
-            <div align="center">Guest Control of Playback State</div>
+            Guest Control of Playback State
           </FormHelperText>
           <RadioGroup
             row
@@ -91,17 +91,17 @@ export default function CreateRoomPage(props) {
             onChange={handleVotesChange}
           />
           <FormHelperText>
-            <div align="center">Votes Required to Skip</div>
+            Votes Required to Skip
           </FormHelperText>
         </FormControl>
       </Grid>
-      <Grid container item spacing={1} justifyContent="center" alignItems="center">
-        <Grid item spacing={6}>
+      <Grid container item justifyContent="center" alignItems="center">
+        <Grid item>
           <Button color="secondary" variant="contained" to="/" component={Link}>
             Back
           </Button>
         </Grid>
-        <Grid item spacing={6}>
+        <Grid item>
           <Button
             color="primary"
             variant="contained"
