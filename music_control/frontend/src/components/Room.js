@@ -65,7 +65,7 @@ export default function Room({ leaveRoomCallback }) {
               color="secondary"
               onClick={() => {setShowSettings(false)}}
             >
-              Discard
+              Close
             </Button>
           </Grid>
         </Grid>
@@ -88,6 +88,11 @@ export default function Room({ leaveRoomCallback }) {
           <Grid item xs={12}>
             <Typography variant="h4" component="h4">
               Votes required to skip: {votesToSkip.toString()}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h4" component="h4">
+              Guest can Pause: {guestCanPause.toString()}
             </Typography>
           </Grid>
           <Grid item xs={12}>

@@ -10,6 +10,7 @@ import {
   TextField,
   Button,
   ButtonGroup,
+  Collapse,
 } from "@mui/material";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -26,7 +27,7 @@ export default function ViewRoomPage(props) {
     defaultProps.guestCanPause
   );
   const [votesToSkip, setVotesToSkip] = useState(defaultProps.votesToSkip);
-  const [updateMessage, setUpdateMessage] = useState("Error 404");
+  const [updateMessage, setUpdateMessage] = useState("");
   const navigate = useNavigate();
 
   function handleGuestCanPauseChange(e) {
@@ -82,16 +83,23 @@ export default function ViewRoomPage(props) {
       sx={{ minHeight: props.update ? "0" : "100vh" }}
     >
       <Grid item xs={12}>
+        <Collapse in={updateMessage != ""}>{updateMessage}</Collapse>
+      </Grid>
+      <Grid item xs={12}>
         <Typography component="h4" variant="h4">
           {title}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <FormControl component="fieldset">
-          <FormHelperText>Guest Control of Playback State</FormHelperText>
+          <FormHelperText sx={{
+            textAlign: "center",
+            }}>
+            Guest Control of Playback State
+          </FormHelperText>
           <RadioGroup
             row
-            defaultValue="true"
+            defaultValue={props.guestCanPause}
             onChange={handleGuestCanPauseChange}
           >
             <FormControlLabel
@@ -114,16 +122,21 @@ export default function ViewRoomPage(props) {
           <TextField
             required
             type="number"
-            defaultValue={votesToSkip}
+            defaultValue={props.votesToSkip}
             inputProps={{ min: 1, style: { textAlign: "center" } }}
             onChange={handleVotesChange}
           />
-          <FormHelperText>Votes Required to Skip</FormHelperText>
+          <FormHelperText sx={{
+            textAlign: "center",
+            }}>
+            Votes Required to Skip
+          </FormHelperText>
         </FormControl>
       </Grid>
       <DisplayButtons
         update={props.update}
         handleRoomButtonPressed={handleRoomButtonPressed}
+        handleUpdateButtonPressed={handleUpdateButtonPressed}
       />
     </Grid>
   );
