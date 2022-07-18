@@ -9,6 +9,7 @@ export default function Room({ leaveRoomCallback }) {
   const [isHost, setIsHost] = useState(false);
   const [noRoom, setNoRoom] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [spotifyAuthenticated, setSpotifyAuthenticated] = useState(false)
   const { roomCode } = useParams();
   const navigate = useNavigate();
 
@@ -24,7 +25,26 @@ export default function Room({ leaveRoomCallback }) {
       setVotesToSkip(data.votes_to_skip);
       setGuestCanPause(data.guest_can_pause);
       setIsHost(data.is_host);
+      if (isHost) {
+        authenticateSpotify();
+      }
     });
+
+  function authenticateSpotify() {
+    fetch("/spotify/is-authenticated")
+      .then((response) => response.json())
+      .then((data) => {
+        setSpotifyAuthenticated(data.status)
+        console.log(data.status);
+        if (!data.status) {
+          fetch("/spotify/get-auth-url")
+            .then((response) => response.json())
+            .then((data) => {
+              window.location.replace(data.url);
+            });
+        }
+      });
+  }
 
   function leaveButtonPressed() {
     const requestOptions = {
@@ -48,7 +68,7 @@ export default function Room({ leaveRoomCallback }) {
           direction="column"
           alignItems="center"
           justifyContent="center"
-          sx={{minHeight: "100vh"}}
+          sx={{ minHeight: "100vh" }}
         >
           <Grid item>
             <ViewRoomPage
@@ -62,7 +82,9 @@ export default function Room({ leaveRoomCallback }) {
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => {setShowSettings(false)}}
+              onClick={() => {
+                setShowSettings(false);
+              }}
             >
               Close
             </Button>
