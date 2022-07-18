@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { Grid, Button, Typography } from "@mui/material";
 import ViewRoomPage from "./ViewRoomPage";
 
@@ -62,10 +62,10 @@ export default function Room({ leaveRoomCallback }) {
           <Grid item>
             <Button
               variant="contained"
-              color="primary"
+              color="secondary"
               onClick={() => {setShowSettings(false)}}
             >
-              okay
+              Discard
             </Button>
           </Grid>
         </Grid>
@@ -95,15 +95,6 @@ export default function Room({ leaveRoomCallback }) {
               Host: {isHost.toString()}
             </Typography>
           </Grid>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={leaveButtonPressed}
-            >
-              Leave Room
-            </Button>
-          </Grid>
           {isHost && (
             <Grid item xs={12}>
               <Button
@@ -115,6 +106,15 @@ export default function Room({ leaveRoomCallback }) {
               </Button>
             </Grid>
           )}
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={leaveButtonPressed}
+            >
+              Leave Room
+            </Button>
+          </Grid>
         </Grid>
       );
     }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
 import {
   Grid,
   FormControl,
@@ -14,11 +14,19 @@ import {
 
 import { Link, useNavigate } from "react-router-dom";
 
-const defaultVotes = "3";
-
 export default function ViewRoomPage(props) {
-  const [guestCanPause, setGuestCanPause] = useState(true);
-  const [votesToSkip, setVotesToSkip] = useState(defaultVotes);
+  const defaultProps = {
+    update: false,
+    votesToSkip: 3,
+    guestCanPause: true,
+    roomCode: null,
+    updateCallback: () => {},
+  };
+  const [guestCanPause, setGuestCanPause] = useState(
+    defaultProps.guestCanPause
+  );
+  const [votesToSkip, setVotesToSkip] = useState(defaultProps.votesToSkip);
+  const [updateMessage, setUpdateMessage] = useState("Error 404");
   const navigate = useNavigate();
 
   function handleGuestCanPauseChange(e) {
@@ -43,6 +51,27 @@ export default function ViewRoomPage(props) {
       .then((data) => navigate("/room/" + data.code, { replace: true }));
   }
 
+  function handleUpdateButtonPressed() {
+    const requestOptions = {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        guest_can_pause: guestCanPause,
+        votes_to_skip: votesToSkip,
+        code: props.roomCode,
+      }),
+    };
+    fetch("/api/update-room", requestOptions).then((response) => {
+      if (response.ok) {
+        setUpdateMessage("Successfully updated room.");
+      } else {
+        setUpdateMessage("An Error occurred. Room was not updated.");
+      }
+    });
+  }
+
+  const title = props.update ? "Update Room" : "Create a Room";
+
   return (
     <Grid
       container
@@ -54,7 +83,7 @@ export default function ViewRoomPage(props) {
     >
       <Grid item xs={12}>
         <Typography component="h4" variant="h4">
-          Create a Room
+          {title}
         </Typography>
       </Grid>
       <Grid item xs={12}>
@@ -85,27 +114,52 @@ export default function ViewRoomPage(props) {
           <TextField
             required
             type="number"
-            defaultValue={defaultVotes}
+            defaultValue={votesToSkip}
             inputProps={{ min: 1, style: { textAlign: "center" } }}
             onChange={handleVotesChange}
           />
           <FormHelperText>Votes Required to Skip</FormHelperText>
         </FormControl>
       </Grid>
+      <DisplayButtons
+        update={props.update}
+        handleRoomButtonPressed={handleRoomButtonPressed}
+      />
+    </Grid>
+  );
+}
+
+function DisplayButtons(props) {
+  if (props.update) {
+    return (
       <Grid item xs={12}>
-        <ButtonGroup disableElevation variant="contained" color="primary">
-          <Button color="secondary" variant="contained" to="/" component={Link}>
-            Back
-          </Button>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={props.handleUpdateButtonPressed}
+        >
+          Update Room
+        </Button>
+      </Grid>
+    );
+  } else {
+    return (
+      <>
+        <Grid item xs={12}>
           <Button
             color="primary"
             variant="contained"
-            onClick={handleRoomButtonPressed}
+            onClick={props.handleRoomButtonPressed}
           >
             Create Room
           </Button>
-        </ButtonGroup>
-      </Grid>
-    </Grid>
-  );
+        </Grid>
+        <Grid item xs={12}>
+          <Button color="secondary" variant="contained" to="/" component={Link}>
+            Back
+          </Button>
+        </Grid>
+      </>
+    );
+  }
 }
