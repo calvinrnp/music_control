@@ -1,4 +1,6 @@
 node_modules/
+credentials.py
+credentials.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
