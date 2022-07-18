@@ -56,7 +56,6 @@ export default function Room({ leaveRoomCallback }) {
               votesToSkip={votesToSkip}
               guestCanPause={guestCanPause}
               roomCode={roomCode}
-              updateCallback={() => {}}
             />
           </Grid>
           <Grid item>

@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useRef, useState } from "react";
 import {
   Grid,
   FormControl,
@@ -9,8 +9,8 @@ import {
   Typography,
   TextField,
   Button,
-  ButtonGroup,
   Collapse,
+  Alert,
 } from "@mui/material";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -21,14 +21,16 @@ export default function ViewRoomPage(props) {
     votesToSkip: 3,
     guestCanPause: true,
     roomCode: null,
-    updateCallback: () => {},
   };
   const [guestCanPause, setGuestCanPause] = useState(
     defaultProps.guestCanPause
   );
   const [votesToSkip, setVotesToSkip] = useState(defaultProps.votesToSkip);
-  const [updateMessage, setUpdateMessage] = useState("");
+  const [updateResponse, setUpdateResponse] = useState("");
   const navigate = useNavigate();
+
+  const votesRef = useRef();
+  const guestRef = useRef();
 
   function handleGuestCanPauseChange(e) {
     setGuestCanPause(e.target.value === "true" ? true : false);
@@ -52,21 +54,23 @@ export default function ViewRoomPage(props) {
       .then((data) => navigate("/room/" + data.code, { replace: true }));
   }
 
-  function handleUpdateButtonPressed() {
+  function handleUpdateButtonPressed(e) {
+    setVotesToSkip(votesRef.current.value);
+    guestRef.current.checked ? setGuestCanPause(true) : setGuestCanPause(false);
     const requestOptions = {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        guest_can_pause: guestCanPause,
-        votes_to_skip: votesToSkip,
+        guest_can_pause: guestRef.current.checked,
+        votes_to_skip: votesRef.current.value,
         code: props.roomCode,
       }),
     };
     fetch("/api/update-room", requestOptions).then((response) => {
       if (response.ok) {
-        setUpdateMessage("Successfully updated room.");
+        setUpdateResponse("success");
       } else {
-        setUpdateMessage("An Error occurred. Room was not updated.");
+        setUpdateResponse("error");
       }
     });
   }
@@ -83,7 +87,29 @@ export default function ViewRoomPage(props) {
       sx={{ minHeight: props.update ? "0" : "100vh" }}
     >
       <Grid item xs={12}>
-        <Collapse in={updateMessage != ""}>{updateMessage}</Collapse>
+        <Collapse in={updateResponse != ""}>
+          {
+            (updateResponse == "success" ? (
+              <Alert
+                severity="success"
+                onClose={() => {
+                  setUpdateResponse("");
+                }}
+              >
+                Room successfully updated.
+              </Alert>
+            ) : (
+              <Alert
+                severity="error"
+                onClose={() => {
+                  setUpdateResponse("");
+                }}
+              >
+                An Error occurred. Room was not updated.
+              </Alert>
+            ))
+          }
+        </Collapse>
       </Grid>
       <Grid item xs={12}>
         <Typography component="h4" variant="h4">
@@ -92,9 +118,11 @@ export default function ViewRoomPage(props) {
       </Grid>
       <Grid item xs={12}>
         <FormControl component="fieldset">
-          <FormHelperText sx={{
-            textAlign: "center",
-            }}>
+          <FormHelperText
+            sx={{
+              textAlign: "center",
+            }}
+          >
             Guest Control of Playback State
           </FormHelperText>
           <RadioGroup
@@ -104,7 +132,7 @@ export default function ViewRoomPage(props) {
           >
             <FormControlLabel
               value="true"
-              control={<Radio color="primary" />}
+              control={<Radio color="primary" inputRef={guestRef} />}
               label="Play/Pause"
               labelPlacement="bottom"
             />
@@ -125,10 +153,13 @@ export default function ViewRoomPage(props) {
             defaultValue={props.votesToSkip}
             inputProps={{ min: 1, style: { textAlign: "center" } }}
             onChange={handleVotesChange}
+            inputRef={votesRef}
           />
-          <FormHelperText sx={{
-            textAlign: "center",
-            }}>
+          <FormHelperText
+            sx={{
+              textAlign: "center",
+            }}
+          >
             Votes Required to Skip
           </FormHelperText>
         </FormControl>

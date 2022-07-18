@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 export default function JoinRoomPage(props) {
   const [roomCode, setRoomCode] = useState("");
   const [error, setError] = useState("");
+  const [errorStatus, setErrorStatus] = useState(false)
   const navigate = useNavigate();
 
   function handleJoinRoomButton() {
@@ -21,9 +22,14 @@ export default function JoinRoomPage(props) {
           navigate(`/room/${roomCode}`, { replace: true });
         } else {
           setError("Room Not Found.");
+          setErrorStatus(true)
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        // console.log(error);
+        setError("An Error Occurred. Please try again later.");
+        setErrorStatus(true)
+      });
   }
 
   function handleTextFieldChange(e) {
@@ -46,7 +52,7 @@ export default function JoinRoomPage(props) {
       </Grid>
       <Grid item xs={12}>
         <TextField
-          error={error}
+          error={errorStatus}
           label="Code"
           placeholder="Enter a Room Code"
           value={roomCode}
